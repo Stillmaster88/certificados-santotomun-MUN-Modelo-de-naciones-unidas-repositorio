@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificados — Modelo de Naciones Unidas — SantoToMUN 2025</title>
+    <!-- Fuentes externas Montserrat y Century Gothic (Montserrat desde Google Fonts, Century Gothic es local) -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: 'Century Gothic', 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .logo {
+            width: 120px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-family: 'Montserrat', 'Century Gothic', Arial, sans-serif;
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            color: #1a237e;
+        }
+        .subtitle {
+            font-size: 1em;
+            color: #444;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1.1em;
+            color: #1565c0;
+            margin-bottom: 16px;
+            margin-top: 32px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 6px;
+            border: 1px solid #bbb;
+            width: 80%;
+            margin-bottom: 16px;
+        }
+        button {
+            background: #1565c0;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        button:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 16px;
+            color: #c62828;
+            font-size: 0.95em;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 8px;
+            }
+            .logo {
+                width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo principal -->
+        <img src="Santotomun-v4.png" alt="Logo SantoToMUN" class="logo">
+        <!-- Texto debajo del logo -->
+        <div class="subtitle">
+            <h3>Facultad de Gobierno y Relaciones Internacionales de la Universidad Santo Tomás</h3>
+        </div>
+        <!-- Título principal -->
+        <h1>Repositorio de certificados del Modelo de Naciones Unidas SantoToMUN</h1>
+        <!-- Sección de descarga -->
+        <div class="section-title">
+            Descarga tu certificado digitando tu número de identificación
+        </div>
+        <!-- Formulario para ingresar número de identificación -->
+        <input type="text" id="cedulaInput" placeholder="Número de identificación">
+        <br>
+        <button onclick="descargarCertificado()">Descargar certificado</button>
+        <div id="mensaje" class="message"></div>
+    </div>
+
+    <script>
+        // Carpeta donde están los certificados PDF (debe estar en el mismo nivel que este HTML)
+        const carpetaCertificados = "C:\\Certificates_SantoToMun_2025_Projetc\\Certificados Santotomun 2024\\";
+        // Si quieres usar la carpeta "Certificados Santotomun 2024" en vez de "certificados", cambia la ruta aquí:
+        // Ejemplo: const carpetaCertificados = "Certificados Santotomun 2024/";
+        // Si la carpeta está en el mismo nivel que este HTML, asegúrate que la ruta sea correcta.
+        // const carpetaCertificados = "Certificados Santotomun 2024/";
+        // Función para descargar el certificado PDF según el número de identificación
+        function descargarCertificado() {
+            const cedula = document.getElementById('cedulaInput').value.trim();
+            const mensaje = document.getElementById('mensaje');
+            mensaje.textContent = "";
+
+            if (!cedula) {
+                mensaje.textContent = "Por favor ingresa tu número de identificación.";
+                return;
+            }
+
+            // Construye la ruta al PDF (ejemplo: certificados/123456789.pdf)
+            const urlPDF = carpetaCertificados + cedula + ".pdf";
+
+            // Verifica si el PDF existe haciendo una petición HEAD
+            fetch(urlPDF, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        // Si existe, inicia la descarga
+                        const link = document.createElement('a');
+                        link.href = urlPDF;
+                        link.download = cedula + ".pdf";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        mensaje.textContent = "Descarga iniciada.";
+                    } else {
+                        mensaje.textContent = "No se encontró el certificado para el número ingresado.";
+                    }
+                })
+                .catch(() => {
+                    mensaje.textContent = "Error al buscar el certificado. Intenta de nuevo.";
+                });
+        }
+
+        // Comentario: Para que esto funcione, debes subir los archivos PDF a la carpeta 'certificados'
+        // y nombrarlos exactamente con el número de identificación (ejemplo: 123456789.pdf).
+        // El logo "Satotomun-v4.png" debe estar en la misma carpeta que este archivo HTML.
+    </script>
+</body>
+</html>
